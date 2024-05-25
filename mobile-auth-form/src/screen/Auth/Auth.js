@@ -1,7 +1,14 @@
 import { Text, View, Image, TextInput, Button } from 'react-native';
 import styles from './style'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import * as Font from 'expo-font'
 
+const loadFont = async () => {
+    await Font.loadAsync({
+        Inter400: require('../../assets/fonts/Inter-Regular.ttf'),
+        Inter700: require('../../assets/fonts/Inter-Bold.ttf')
+    })
+}
 
 export default function Auth({ navigation }) {
     const [inp, setInp] = useState({ email: '', password: '' })
@@ -9,6 +16,10 @@ export default function Auth({ navigation }) {
     function changeValue(val, name) {
         setInp({ ...inp, [name]: val })
     }
+
+    useEffect(() => {
+        loadFont()
+    }, [])
 
     function checkInp() {
         try {
@@ -29,8 +40,8 @@ export default function Auth({ navigation }) {
         <View style={styles.wrapper}>
             <TextInput style={styles.inp} onChangeText={(val) => changeValue(val, 'email')} placeholder='Email'></TextInput>
             <TextInput style={styles.inp} onChangeText={(val) => changeValue(val, 'password')} placeholder='Password' secureTextEntry={true}></TextInput>
-            <Text>Don’t have an account ? <Text onPress={() => navigation.navigate('Sign up')}>Sign Up</Text></Text>
-            <Button title='Login' onPress={checkInp}></Button>
+            <Text style={styles.signUp}>Don’t have an account ? <Text onPress={() => navigation.navigate('Sign up')}>Sign Up</Text></Text>
+            <Text style={styles.login} onPress={checkInp}>Login</Text>
         </View >
     );
 }
